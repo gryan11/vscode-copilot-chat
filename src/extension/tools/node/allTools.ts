@@ -15,6 +15,7 @@ import './findTextInFilesTool';
 import './getErrorsTool';
 import './getNotebookCellOutputTool';
 import './getSearchViewResultsTool';
+import './githubContextSubagentTool';
 import './githubRepoTool';
 import './insertEditTool';
 import './installExtensionTool';

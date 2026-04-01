@@ -236,6 +236,40 @@
 				}
 			},
 			{
+				"name": "github_context_subagent",
+				"toolReferenceName": "githubContextSubagent",
+				"displayName": "%copilot.tools.githubContextSubagent.name%",
+				"icon": "$(github)",
+				"userDescription": "%copilot.tools.githubContextSubagent.description%",
+				"modelDescription": "Launch a subagent that retrieves relevant GitHub artifacts (issues, pull requests, commits, documentation) for the current task.\nUSE THIS to gather GitHub context before or during development — especially for understanding related issues, recent changes, or internal documentation.\nThe subagent searches GitHub using parallel tool calls and returns a succinct summary of the most relevant findings.\nYou can pass your entire task description for broad context gathering, or make targeted requests (e.g., \"find the PR that introduced the auth regression\").\nReturns: A structured summary of relevant GitHub artifacts (issues, PRs, commits, docs).\nInput fields:\n- query: Natural language description of what GitHub context to retrieve.\n- description: Short user-visible invocation message.\n- repoOwner: (optional) Repository owner to scope queries to a specific repo.\n- repoName: (optional) Repository name to scope queries to a specific repo.\nNOTE: This subagent retrieves artifacts, not code. Only use it for issues, PRs, commits, and documentation — not for searching code in the workspace.",
+				"when": "config.github.copilot.chat.githubContextSubagent.enabled",
+				"inputSchema": {
+					"type": "object",
+					"properties": {
+						"query": {
+							"type": "string",
+							"description": "Natural language description of what GitHub context to retrieve."
+						},
+						"description": {
+							"type": "string",
+							"description": "Short user-visible invocation message."
+						},
+						"repoOwner": {
+							"type": "string",
+							"description": "Optional repository owner to scope queries to a specific repo."
+						},
+						"repoName": {
+							"type": "string",
+							"description": "Optional repository name to scope queries to a specific repo."
+						}
+					},
+					"required": [
+						"query",
+						"description"
+					]
+				}
+			},
+			{
 				"name": "copilot_searchWorkspaceSymbols",
 				"toolReferenceName": "symbols",
 				"displayName": "%copilot.tools.searchWorkspaceSymbols.name%",

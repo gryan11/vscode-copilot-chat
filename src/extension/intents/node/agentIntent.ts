@@ -115,6 +115,9 @@ export const getAgentTools = async (accessor: ServicesAccessor, request: vscode.
 	const executionSubagentEnabled = configurationService.getExperimentBasedConfig(ConfigKey.Advanced.ExecutionSubagentToolEnabled, experimentationService);
 	allowTools[ToolName.ExecutionSubagent] = isGptOrAnthropic && executionSubagentEnabled;
 
+	const githubContextSubagentEnabled = configurationService.getExperimentBasedConfig(ConfigKey.Advanced.GithubContextSubagentToolEnabled, experimentationService);
+	allowTools[ToolName.GithubContextSubagent] = isGptOrAnthropic && githubContextSubagentEnabled;
+
 	if (model.family.includes('grok-code')) {
 		allowTools[ToolName.CoreManageTodoList] = false;
 	}
