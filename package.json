@@ -4373,6 +4373,33 @@
 							"experimental"
 						]
 					},
+					"github.copilot.chat.githubContextSubagent.enabled": {
+						"type": "boolean",
+						"default": false,
+						"markdownDescription": "%github.copilot.config.githubContextSubagent.enabled%",
+						"tags": [
+							"advanced",
+							"experimental"
+						]
+					},
+					"github.copilot.chat.githubContextSubagent.model": {
+						"type": "string",
+						"default": "",
+						"markdownDescription": "%github.copilot.config.githubContextSubagent.model%",
+						"tags": [
+							"advanced",
+							"experimental"
+						]
+					},
+					"github.copilot.chat.githubContextSubagent.toolCallLimit": {
+						"type": "number",
+						"default": 5,
+						"markdownDescription": "%github.copilot.config.githubContextSubagent.toolCallLimit%",
+						"tags": [
+							"advanced",
+							"experimental"
+						]
+					},
 					"github.copilot.chat.summarizeAgentConversationHistoryThreshold": {
 						"type": [
 							"number",

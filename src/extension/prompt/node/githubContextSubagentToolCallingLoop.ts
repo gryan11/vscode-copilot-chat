@@ -41,24 +41,29 @@ export interface IGithubContextSubagentToolCallingLoopOptions extends IToolCalli
  * and use the `github/` prefix convention.
  */
 const ALLOWED_GITHUB_MCP_TOOLS = new Set([
-	// Issues
-	'github/search_issues',
-	'github/issue_read',
-	'github/list_issues',
-	// Pull requests
-	'github/search_pull_requests',
-	'github/pull_request_read',
-	'github/list_pull_requests',
-	// Commits
-	'github/list_commits',
-	'github/get_commit',
-	// Code (de-emphasized in prompt — only for artifacts not in local workspace)
-	'github/search_code',
-	'github/get_file_contents',
-	// Context & documentation
-	'github/list_branches',
-	'github/get_copilot_space',
-	'github/list_copilot_spaces',
+	// Elasticsearch semantic search (preferred for initial discovery)
+	'mcp_elasticsearch-issues_search_issues',
+	'mcp_elasticsearch-issues_get_issue',
+	'mcp_elasticsearch_search_issues',
+	'mcp_elasticsearch_get_issue',
+	// GitHub Issues
+	'mcp_github_search_issues',
+	'mcp_github_issue_read',
+	'mcp_github_list_issues',
+	// GitHub Pull requests
+	'mcp_github_search_pull_requests',
+	'mcp_github_pull_request_read',
+	'mcp_github_list_pull_requests',
+	// GitHub Commits
+	'mcp_github_list_commits',
+	'mcp_github_get_commit',
+	// GitHub Code (de-emphasized in prompt — only for artifacts not in local workspace)
+	'mcp_github_search_code',
+	'mcp_github_get_file_contents',
+	// GitHub Context & documentation
+	'mcp_github_list_branches',
+	'mcp_github_get_copilot_space',
+	'mcp_github_list_copilot_spaces',
 ]);
 
 export class GithubContextSubagentToolCallingLoop extends ToolCallingLoop<IGithubContextSubagentToolCallingLoopOptions> {
