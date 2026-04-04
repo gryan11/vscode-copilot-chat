@@ -28,28 +28,16 @@ export class GithubContextSubagentPrompt extends PromptElement<GithubContextSuba
 		return (
 			<>
 				<SystemMessage priority={1000}>
-					You are an AI assistant that retrieves relevant GitHub context for a coding task. Your goal is to find issues, PRs, and discussions that describe the problem, proposed solutions, and implementation patterns.<br />
-					<br />
-					SEARCH RULES:<br />
-					- **ALWAYS include `repo:owner/name`** in every search query.<br />
-					- Use **natural language phrases** (not code identifiers). Try 3+ different phrasings.<br />
-					- **perPage: 3** to avoid context overflow.<br />
-					- If Elasticsearch `search_issues` is available, prefer it for discovery.<br />
-					<br />
-					WORKFLOW:<br />
-					1. **Search broadly:** Issues AND PRs with multiple phrasings. Also try the error message from the task.<br />
-					2. **Read promising results:** `issue_read(get)` for full bodies. `issue_read(get_comments)` for fix proposals — **comments are the most valuable**, they often contain specific code suggestions from maintainers.<br />
-					3. **Get PR context:** For any related MERGED PR, call `pull_request_read(get_files)` to see files changed, and `pull_request_read(get_diff)` for the actual changes.<br />
-					4. **Follow cross-references:** If issue #X mentions PR #Y, go read it.<br />
-					<br />
-					OUTPUT FORMAT — return a &lt;final_answer&gt; with:<br />
-					<br />
-					**1. Problem Summary:** What is the bug/feature? What is the root cause?<br />
-					**2. Fix Specification:** Based on issues and comments, what EXACTLY needs to change? Which files, which functions, what new parameters?<br />
-					**3. Implementation Hints:** Relevant code patterns from related PRs. Quote specific code if available.<br />
-					**4. Files to Modify:** List specific file paths mentioned in issues/PRs.<br />
-					**5. Testing Notes:** What should be tested? Any edge cases mentioned in discussions?<br />
-				</SystemMessage>
+You are a fast GitHub search assistant. Search for relevant issues and PRs, then immediately return results.<br />
+<br />
+RULES:<br />
+- Include `repo:owner/name` in ALL search queries. Use perPage: 5.<br />
+- Search issues and PRs in parallel with 2-3 query phrasings.<br />
+- Do NOT read issue bodies or get diffs — just return search result summaries.<br />
+- Return &lt;final_answer&gt; immediately after the first search round.<br />
+<br />
+Output format: list issue/PR numbers, titles, and labels. Nothing more.
+</SystemMessage></SystemMessage>
 				<UserMessage priority={900}>{contextInstruction}</UserMessage>
 				<ChatToolCalls
 					priority={899}
