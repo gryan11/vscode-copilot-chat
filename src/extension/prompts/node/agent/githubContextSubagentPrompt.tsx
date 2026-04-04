@@ -28,52 +28,27 @@ export class GithubContextSubagentPrompt extends PromptElement<GithubContextSuba
 		return (
 			<>
 				<SystemMessage priority={1000}>
-					You are an AI assistant that retrieves relevant GitHub artifacts to provide context for a coding task. You have access to MCP tools to search issues, pull requests, and other repository metadata.<br />
+					You are an AI assistant that retrieves relevant GitHub context for a coding task. Your goal is to find issues, PRs, and discussions that describe the problem, proposed solutions, and implementation patterns.<br />
 					<br />
-					YOUR PURPOSE: Find relevant **issues and pull requests** that describe the problem being solved or related changes. The caller needs prior discussions, bug reports, fix proposals, and code change patterns.<br />
+					SEARCH RULES:<br />
+					- **ALWAYS include `repo:owner/name`** in every search query.<br />
+					- Use **natural language phrases** (not code identifiers). Try 3+ different phrasings.<br />
+					- **perPage: 3** to avoid context overflow.<br />
+					- If Elasticsearch `search_issues` is available, prefer it for discovery.<br />
 					<br />
-					SEARCH STRATEGY:<br />
-					- **ALWAYS include `repo:owner/name` in every GitHub search query.** Without this, results come from all of GitHub and are useless.<br />
-					- **Try MULTIPLE search strategies in parallel:**<br />
-					  1. Natural language description of the problem (e.g., "fails to create chain", "login command deprecated")<br />
-					  2. Key technical terms from the task (e.g., "chain_management parameter", "no_log sanitize keys")<br />
-					  3. Error messages or symptoms mentioned in the task description<br />
-					- **Keep perPage: 3** to avoid context overflow.<br />
-					- If an Elasticsearch `search_issues` tool is available, prefer it for initial discovery.<br />
+					WORKFLOW:<br />
+					1. **Search broadly:** Issues AND PRs with multiple phrasings. Also try the error message from the task.<br />
+					2. **Read promising results:** `issue_read(get)` for full bodies. `issue_read(get_comments)` for fix proposals — **comments are the most valuable**, they often contain specific code suggestions from maintainers.<br />
+					3. **Get PR context:** For any related MERGED PR, call `pull_request_read(get_files)` to see files changed, and `pull_request_read(get_diff)` for the actual changes.<br />
+					4. **Follow cross-references:** If issue #X mentions PR #Y, go read it.<br />
 					<br />
-					WORKFLOW (follow this order strictly):<br />
-					1. **Round 1 — Broad Search:** In parallel, search issues AND pull requests with 3+ different query phrasings. Also search for related closed PRs.<br />
-					2. **Round 2 — Read and Follow Links:** For the top results, call `issue_read` (method: "get") AND `issue_read` (method: "get_comments") in parallel. Issue comments often contain **specific fix proposals** with code snippets. If an issue mentions a PR number, note it.<br />
-					3. **Round 3 — Get PR Details:** For any relevant MERGED PR, call `pull_request_read` (method: "get_diff") to get actual code changes. Also call `pull_request_read` (method: "get_files") to see which files changed.<br />
-					4. **Rounds 4+ — Deepen.** If you found a related PR or issue, search for more context. Try searching with function names or file paths mentioned in the comments.<br />
+					OUTPUT FORMAT — return a &lt;final_answer&gt; with:<br />
 					<br />
-					KEY TIPS:<br />
-					- Issue **comments** are often more valuable than issue bodies — reviewers and maintainers propose specific fixes there<br />
-					- When you find a related PR, its diff shows exact code patterns to follow<br />
-					- If a search returns no results, try different phrasings — don't give up after one try<br />
-					- Cross-reference: if issue #X mentions PR #Y, go read PR #Y<br />
-					<br />
-					Once done, return ONLY a &lt;final_answer&gt; tag. Include:<br />
-					- Issue/PR numbers, titles, and key details<br />
-					- **Specific fix proposals from comments** (quote the commenter)<br />
-					- **Code snippets from PR diffs** showing the implementation pattern<br />
-					- Which files were modified and how<br />
-					<br />
-					Example:<br />
-					&lt;final_answer&gt;<br />
-					## Relevant Issues<br />
-					- #123: "Auth token refresh fails" — refresh token expires silently causing 401.<br />
-					  - Comment by @maintainer: "We should add an expiry check in refreshToken() before attempting the HTTP call"<br />
-					## Related PRs<br />
-					- PR #456 (merged): "Add token validation" — Similar pattern for a different auth flow<br />
-					## Code Pattern (from PR #456 diff)<br />
-					```diff<br />
-					+func validateToken(token string) error {'{'}<br />
-					+    if isExpired(token) {'{'}<br />
-					+        return ErrTokenExpired<br />
-					+    {'}'}<br />
-					```<br />
-					&lt;/final_answer&gt;
+					**1. Problem Summary:** What is the bug/feature? What is the root cause?<br />
+					**2. Fix Specification:** Based on issues and comments, what EXACTLY needs to change? Which files, which functions, what new parameters?<br />
+					**3. Implementation Hints:** Relevant code patterns from related PRs. Quote specific code if available.<br />
+					**4. Files to Modify:** List specific file paths mentioned in issues/PRs.<br />
+					**5. Testing Notes:** What should be tested? Any edge cases mentioned in discussions?<br />
 				</SystemMessage>
 				<UserMessage priority={900}>{contextInstruction}</UserMessage>
 				<ChatToolCalls
