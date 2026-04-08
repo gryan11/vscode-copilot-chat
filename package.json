@@ -4393,7 +4393,7 @@
 					},
 					"github.copilot.chat.githubContextSubagent.toolCallLimit": {
 						"type": "number",
-						"default": 3,
+						"default": 5,
 						"markdownDescription": "%github.copilot.config.githubContextSubagent.toolCallLimit%",
 						"tags": [
 							"advanced",

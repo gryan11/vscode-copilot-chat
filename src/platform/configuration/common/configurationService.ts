@@ -660,7 +660,7 @@ export namespace ConfigKey {
 		/** Model to use for the GitHub context subagent */
 		export const GithubContextSubagentModel = defineSetting<string>('chat.githubContextSubagent.model', ConfigType.Simple, '');
 		/** Maximum number of tool call rounds the GitHub context subagent can make */
-		export const GithubContextSubagentToolCallLimit = defineSetting<number>('chat.githubContextSubagent.toolCallLimit', ConfigType.ExperimentBased, 3);
+		export const GithubContextSubagentToolCallLimit = defineSetting<number>('chat.githubContextSubagent.toolCallLimit', ConfigType.ExperimentBased, 5);
 
 		export const InlineEditsTriggerOnEditorChangeAfterSeconds = defineAndMigrateExpSetting<number | undefined>('chat.advanced.inlineEdits.triggerOnEditorChangeAfterSeconds', 'chat.inlineEdits.triggerOnEditorChangeAfterSeconds', undefined);
 		export const InlineEditsNextCursorPredictionDisplayLine = defineAndMigrateExpSetting<boolean>('chat.advanced.inlineEdits.nextCursorPrediction.displayLine', 'chat.inlineEdits.nextCursorPrediction.displayLine', true);
