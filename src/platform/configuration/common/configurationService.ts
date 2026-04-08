@@ -654,7 +654,7 @@ export namespace ConfigKey {
 		/** Model to use for the execution subagent */
 		export const ExecutionSubagentModel = defineSetting<string>('chat.executionSubagent.model', ConfigType.Simple, '');
 		/** Maximum number of tool calls the execution subagent can make */
-		export const ExecutionSubagentToolCallLimit = defineSetting<number>('chat.executionSubagent.toolCallLimit', ConfigType.ExperimentBased, 3);
+		export const ExecutionSubagentToolCallLimit = defineSetting<number>('chat.executionSubagent.toolCallLimit', ConfigType.ExperimentBased, 5);
 
 		export const GithubContextSubagentToolEnabled = defineSetting<boolean>('chat.githubContextSubagent.enabled', ConfigType.ExperimentBased, false);
 		/** Model to use for the GitHub context subagent */

@@ -87,7 +87,7 @@ export class ClaudeCodeModels extends Disposable implements IClaudeCodeModels {
 				return 0;
 			}
 		};
-		this._register(lm.registerLanguageModelChatProvider('claude-code', provider));
+		this._register(lm.registerLanguageModelChatProvider('copilot', provider));
 
 		void this._getEndpoints().then(() => this._onDidChange.fire());
 	}
